@@ -15,14 +15,14 @@ function App() {
       return;
     }
     try {
-      const response = await fetch(`http://127.0.0.1:5000/get_morse_data?text=${encodeURIComponent(textInput)}`);
+      const response = await fetch(`http://localhost:5000/get_morse_data?text=${encodeURIComponent(textInput)}`);
       if (!response.ok) {
         throw new Error(`Error: ${response.status}`);
       }
       const result = await response.json();
       setMorseCode(result.morse_code);
 
-      const uniqueAudioUrl = `http://127.0.0.1:5000/static/morse_audio.wav?timestamp=${Date.now()}`;
+      const uniqueAudioUrl = `http://localhost:5000/static/morse_audio.wav?timestamp=${Date.now()}`;
       const audio = new Audio(uniqueAudioUrl);
       audio.onplay = () => {
         ballAnimate(result.morse_code);  
