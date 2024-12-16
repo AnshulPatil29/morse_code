@@ -4,15 +4,16 @@ import './App.css';
 function App() {
   const [textInput, setTextInput] = useState('');
   const [morseCode, setMorseCode] = useState('');
-  const [linkIsAvailable,setLinkIsAvailable]=useState(false);
-  const [audioUrl,setAudioUrl]=useState('');
+  const [linkIsAvailable, setLinkIsAvailable] = useState(false);
+  const [audioUrl, setAudioUrl] = useState('');
+
   const handleInputChange = (event) => {
     setTextInput(event.target.value);
   };
 
   const getMorseData = async () => {
     if (textInput.trim() === '') {
-      alert("Enter some text");
+      alert('Enter some text');
       return;
     }
     try {
@@ -28,14 +29,28 @@ function App() {
       setAudioUrl(uniqueAudioUrl);
       const audio = new Audio(uniqueAudioUrl);
       await audio.play();
-      console.log("Morse code:", result.morse_code);
+      console.log('Morse code:', result.morse_code);
     } catch (error) {
-      console.error("Error fetching morse data:", error);
+      console.error('Error fetching morse data:', error);
     }
   };
 
   const playAudio = () => {
     getMorseData();
+  };
+
+  const handleDownload = () => {
+    fetch(audioUrl)
+      .then((response) => response.blob()) 
+      .then((blob) => {
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob); 
+        link.download = 'morse-audio.wav'; 
+        link.click();
+      })
+      .catch((error) => {
+        console.error('Error downloading audio:', error);
+      });
   };
 
   return (
@@ -49,7 +64,13 @@ function App() {
         />
         <button onClick={playAudio}>Play</button>
         <p>The morse code is: {morseCode}</p>
-        {linkIsAvailable && (<a href={audioUrl} download="morse-audio.mp3">Download audio</a>)}
+        {linkIsAvailable && (
+          <div>
+            <button onClick={handleDownload} style={{ padding: '10px 20px', backgroundColor: 'green', color: 'white', border: 'none', borderRadius: '3px' }}>
+              Download Audio
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
