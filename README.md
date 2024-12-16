@@ -59,3 +59,23 @@ Before you start, ensure that you have the following installed:
 1. The code does not work on all mobile devices due to differences in permissions of browsers on mobile devices. This may be fixed in the future.
 2. I attempted to implement a waveform-like feature using CSS animation, but it ended up being too rigid and wasn’t perfectly in sync. The remnants of the old code can be found on the branch `animation-text`. Recommendations and fixes are appreciated.
 
+### Optional
+To open the app on other devices on the same network:
+1. Update the links in the following lines in `frontend/src/App.js`:
+   - Line 26: Replace `localhost` with the device's IP address.
+   - Line 33: Replace `localhost` with the device's IP address.
+   - Line 49: Replace `localhost` with the device's IP address.
+   - Line 53: Replace `localhost` with the device's IP address.
+   
+2. After making these changes, you can access the app on other devices by using the IP address of your computer (where the app is running) along with the port number, which is typically `3000` for the React app.
+
+3. You can find the IP address of your device by running the following command in your terminal:
+   - On Linux/Mac:
+     ```bash
+     ifconfig
+     ```
+   - On Windows:
+     ```bash
+     ipconfig
+     ```
+
