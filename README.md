@@ -8,6 +8,9 @@ This project allows you to convert text to Morse code, listen to its audio, and 
 - Download Morse code audio as a `.wav` file.
 - Morse code to Text conversion.
 
+### UI 
+![UI Screenshot](Images/UI.png)
+
 ### Prerequisites
 
 Before you start, ensure that you have the following installed:
