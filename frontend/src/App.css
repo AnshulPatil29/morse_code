@@ -12,153 +12,6 @@ body {
   height: 100vh;
 }
 
-.container{
-  display:flex;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
-  width: 100vw;
-}
-
-.ball{
-  width: 3rem;
-  height: 3rem;
-  background-color: aqua;
-  /* border-radius: 2dvb; */
-  transform-origin: bottom;
-}
-
-.dash-in{
-  animation: dash-in 0.15s ease-in forwards;
-}
-.dash-out{
-  animation: dash-out 0.15s ease-in forwards;
-}
-.dot-in{
-  animation: dot-in 0.1s ease-in forwards;
-}
-.dot-out{
-  animation: dot-out 0.1s ease-in forwards;
-}
-.space-in{
-  animation: space-in 0.1s ease-in forwards;
-}
-.space-out{
-  animation: space-out 0.1s ease-in forwards;
-}
-@keyframes dash-in {
-  0% {
-      transform: scaleY(1);
-  }
-  100% {
-      transform: scaleY(4);
-  }
-}
-
-@keyframes dash-out {
-  0% {
-      transform: scaleY(4);
-  }
-  100% {
-      transform: scaleY(1);
-  }
-}
-
-@keyframes dot-in {
-  0% {
-      transform: scaleY(1);
-  }
-  100% {
-      transform: scaleY(2);
-  }
-}
-
-@keyframes dot-out {
-  0% {
-      transform: scaleY(2);
-  }
-  100% {
-      transform: scaleY(1);
-  }
-}
-
-/* Easing transitions for smoother effect */
-.dot-in,
-.dash-in {
-  animation-timing-function: ease-in-out;
-}
-
-.dot-out,
-.dash-out {
-  animation-timing-function: ease-in-out;
-}
-
-
-
-@keyframes dash-in {
-  0% {
-      transform: scaleY(1);
-  }
-  100% {
-      transform: scaleY(4);
-  }
-}
-
-@keyframes dash-out {
-  0% {
-      transform: scaleY(4);
-  }
-  100% {
-      transform: scaleY(1);
-  }
-}
-
-@keyframes dot-in {
-  0% {
-      transform: scaleY(1);
-  }
-  100% {
-      transform: scaleY(2);
-  }
-}
-
-@keyframes dot-out {
-  0% {
-      transform: scaleY(2);
-  }
-  100% {
-      transform: scaleY(1);
-  }
-}
-
-/* Easing transitions for smoother effect */
-.dot-in,
-.dash-in {
-  animation-timing-function: ease-in-out;
-}
-
-.dot-out,
-.dash-out {
-  animation-timing-function: ease-in-out;
-}
-
-
-@keyframes space-in {
-  0%{
-      transform: scaleY(1);
-  }
-  100%{
-      transform: scaleY(.5);
-  }
-}
-@keyframes space-out {
-  0%{
-      transform: scaleY(1);
-  }
-  100%{
-      transform: scaleY(2);
-  }
-}
 
 .input-container {
   margin-top: 10%;
@@ -199,4 +52,13 @@ p {
   font-size: 1.2rem;
   color: white;
   margin-top: 20px;
+}
+
+a{
+  color:aliceblue;
+
+}
+
+a:hover{
+  color:beige;
 }

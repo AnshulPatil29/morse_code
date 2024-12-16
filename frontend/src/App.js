@@ -4,7 +4,8 @@ import './App.css';
 function App() {
   const [textInput, setTextInput] = useState('');
   const [morseCode, setMorseCode] = useState('');
-
+  const [linkIsAvailable,setLinkIsAvailable]=useState(false);
+  const [audioUrl,setAudioUrl]=useState('');
   const handleInputChange = (event) => {
     setTextInput(event.target.value);
   };
@@ -15,58 +16,23 @@ function App() {
       return;
     }
     try {
-      const response = await fetch(`http://127.0.0.1:5000/get_morse_data?text=${encodeURIComponent(textInput)}`);
+      const response = await fetch(`http://localhost:5000/get_morse_data?text=${encodeURIComponent(textInput)}`);
       if (!response.ok) {
         throw new Error(`Error: ${response.status}`);
       }
       const result = await response.json();
       setMorseCode(result.morse_code);
 
-      const uniqueAudioUrl = `http://127.0.0.1:5000/static/morse_audio.wav?timestamp=${Date.now()}`;
+      const uniqueAudioUrl = `http://localhost:5000/static/morse_audio.wav?timestamp=${Date.now()}`;
+      setLinkIsAvailable(true);
+      setAudioUrl(uniqueAudioUrl);
       const audio = new Audio(uniqueAudioUrl);
-      audio.onplay = () => {
-        ballAnimate(result.morse_code);  
-      };
       await audio.play();
       console.log("Morse code:", result.morse_code);
     } catch (error) {
       console.error("Error fetching morse data:", error);
     }
   };
-
-  function ballAnimate(morse_code) {
-    
-    const ball = document.querySelector('.ball');
-    if (!ball) return; 
-
-    let duration = 0;
-
-    const animate = (type, time) => {
-        const inClass = `${type}-in`;
-        const outClass = `${type}-out`;
-
-        setTimeout(() => {
-            ball.classList.add(inClass);
-            setTimeout(() => {
-                ball.classList.remove(inClass);
-                ball.classList.add(outClass);
-                setTimeout(() => {
-                    ball.classList.remove(outClass);
-                }, time); 
-            }, 100); 
-        }, duration);
-
-        duration += time + 100;
-    };
-
-    for (const character of morse_code) {
-        if (character === '.') {
-            animate('dot', 100);
-        } else if (character === '-') {
-            animate('dash', 300);
-        }
-    }
-}
 
   const playAudio = () => {
     getMorseData();
@@ -83,9 +49,7 @@ function App() {
         />
         <button onClick={playAudio}>Play</button>
         <p>The morse code is: {morseCode}</p>
-      </div>
-      <div className="container">
-        <div className="ball"></div>
+        {linkIsAvailable && (<a href={audioUrl} download="morse-audio.mp3">Download audio</a>)}
       </div>
     </div>
   );
