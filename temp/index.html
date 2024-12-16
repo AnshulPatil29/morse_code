@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Morse Code Animation</title>
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+    <div class="container">
+        <div class="ball"></div>
+    </div>
+    <script type="module">
+        import ballAnimate from './index.js';
+
+        const ball = document.querySelector('.ball');
+        ball.addEventListener('click', ballAnimate);
+    </script>
+</body>
+</html>
