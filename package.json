@@ -5,7 +5,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "concurrently \"npm run server\" \"npm run client\"",
-    "server": "cd backend && python ./server.py" ,
+    "server": "cd backend && python ./server.py",
     "client": "cd frontend && npm start"
   },
   "keywords": [],
@@ -14,5 +14,8 @@
   "description": "",
   "devDependencies": {
     "concurrently": "^9.1.0"
+  },
+  "dependencies": {
+    "react-audio-visualize": "^1.2.0"
   }
 }

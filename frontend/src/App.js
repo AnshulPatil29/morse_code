@@ -1,14 +1,39 @@
-import { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
+import WaveSurfer from 'wavesurfer.js';
 import './App.css';
 
 function App() {
   const [textInput, setTextInput] = useState('');
   const [morseInput, setMorseInput] = useState('');
   const [morseCode, setMorseCode] = useState('');
-  const [linkIsAvailable, setLinkIsAvailable] = useState(false);
-  const [audioUrl, setAudioUrl] = useState('');
-  const [isTextInput, setIsTextInput] = useState(true);
   const [plainText, setPlainText] = useState('');
+  const [audioUrl, setAudioUrl] = useState('');
+  const [linkIsAvailable, setLinkIsAvailable] = useState(false);
+  const [isTextInput, setIsTextInput] = useState(true);
+  const waveformRef = useRef(null);
+  const waveSurfer = useRef(null);
+
+  useEffect(() => {
+    if (audioUrl) {
+      if (waveSurfer.current) {
+        waveSurfer.current.destroy();
+      }
+
+      waveSurfer.current = WaveSurfer.create({
+        container: waveformRef.current,
+        waveColor: '#084547',
+        progressColor: '#0eb5bb',
+        barWidth: 2,
+        responsive: true,
+        height: 80,
+      });
+
+      waveSurfer.current.load(audioUrl);
+      waveSurfer.current.on('ready', () => {
+        waveSurfer.current.play();
+      });
+    }
+  }, [audioUrl]);
 
   const handleInputChange = (event) => {
     setTextInput(event.target.value);
@@ -19,22 +44,20 @@ function App() {
   };
 
   const getMorseData = async () => {
-    if (textInput.trim() === '') {
-      return;
-    }
+    if (textInput.trim() === '') return;
+
     try {
-      const response = await fetch(`http://localhost:5000/get_morse_data?text=${encodeURIComponent(textInput)}`);
-      if (!response.ok) {
-        throw new Error(`Error: ${response.status}`);
-      }
+      const response = await fetch(
+        `http://localhost:5000/get_morse_data?text=${encodeURIComponent(textInput)}`
+      );
+      if (!response.ok) throw new Error(`Error: ${response.status}`);
+
       const result = await response.json();
       setMorseCode(result.morse_code);
 
       const uniqueAudioUrl = `http://localhost:5000/static/morse_audio.wav?timestamp=${Date.now()}`;
-      setLinkIsAvailable(true);
       setAudioUrl(uniqueAudioUrl);
-      const audio = new Audio(uniqueAudioUrl);
-      await audio.play();
+      setLinkIsAvailable(true);
       console.log('Morse code:', result.morse_code);
     } catch (error) {
       console.error('Error fetching morse data:', error);
@@ -42,22 +65,21 @@ function App() {
   };
 
   const getPlainTextFromMorse = async () => {
-    if (morseInput.trim() === '') {
-      return;
-    }
+    if (morseInput.trim() === '') return;
+
     try {
-      const response = await fetch(`http://localhost:5000/get_plain_text_from_morse?morse_code=${encodeURIComponent(morseInput)}`);
-      if (!response.ok) {
-        throw new Error(`Error: ${response.status}`);
-      }
+      const response = await fetch(
+        `http://localhost:5000/get_plain_text_from_morse?morse_code=${encodeURIComponent(morseInput)}`
+      );
+      if (!response.ok) throw new Error(`Error: ${response.status}`);
+
       const result = await response.json();
       setPlainText(result.plain_text);
-      console.log('Plain text:', result.plain_text);
-
+      setLinkIsAvailable(true);
       const audioUrl = `http://localhost:5000/static/morse_audio.wav?timestamp=${Date.now()}`;
       setAudioUrl(audioUrl);
-      const audio = new Audio(audioUrl);
-      await audio.play();
+      setLinkIsAvailable(true);
+      console.log('Plain text:', result.plain_text);
     } catch (error) {
       console.error('Error fetching plain text:', error);
     }
@@ -83,7 +105,16 @@ function App() {
 
   return (
     <div className="App">
-      <h2 style={{color:"whitesmoke",fontFamily:"'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif"}}>Morse code audio generator</h2>
+      <h2
+        style={{
+          color: 'whitesmoke',
+          fontFamily:
+            "'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif",
+        }}
+      >
+        Morse Code Audio Generator
+      </h2>
+
       <div className="input-container">
         {isTextInput ? (
           <>
@@ -94,7 +125,7 @@ function App() {
               onChange={handleInputChange}
             />
             <button onClick={getMorseData}>Play</button>
-            <p>The morse code is: {morseCode}</p>
+            <p>The Morse code is: {morseCode}</p>
           </>
         ) : (
           <>
@@ -111,16 +142,42 @@ function App() {
 
         <div className="radio-buttons">
           <label>
-            <input type="radio" value="text" checked={isTextInput} onChange={handleRadioChange} /> Text to Morse
+            <input
+              type="radio"
+              value="text"
+              checked={isTextInput}
+              onChange={handleRadioChange}
+            />{' '}
+            Text to Morse
           </label>
           <label>
-            <input type="radio" value="morse" checked={!isTextInput} onChange={handleRadioChange} /> Morse to Text
+            <input
+              type="radio"
+              value="morse"
+              checked={!isTextInput}
+              onChange={handleRadioChange}
+            />{' '}
+            Morse to Text
           </label>
         </div>
 
         {linkIsAvailable && (
           <div>
             <button onClick={handleDownload}>Download Audio</button>
+          </div>
+        )}
+
+        {linkIsAvailable && (
+          <div>
+            <h3 style={{ color: 'whitesmoke' }}>Audio Visualization</h3>
+            <div
+              ref={waveformRef}
+              style={{
+                width: '100%',
+                border: '1px solid #ccc',
+                marginTop: '10px',
+              }}
+            ></div>
           </div>
         )}
       </div>
